@@ -3,7 +3,7 @@
 
 import pickle
 
-import cunumeric as cn
+import cupynumeric as cn
 import numpy as np
 import pytest
 from legate.core import get_legate_runtime
@@ -30,7 +30,7 @@ def test_kmeans_training(n_rows, n_cols, k, dtype, verbose=False):
     # Increasing the number of rows stabilizes the test.
 
     # TODO: make_blobs doesn't support float64 currently (I think)
-    #       This is the only reason for cunumeric (below use can be as_array).
+    #       This is the only reason for cupynumeric (below use can be as_array).
     X, y = make_blobs(n_rows, n_cols, k)
     X = cn.asarray(X)
     X = X.astype(dtype, copy=False)

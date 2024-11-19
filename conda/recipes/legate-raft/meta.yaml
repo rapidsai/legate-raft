@@ -39,7 +39,7 @@ build:
     - {{ compiler('cuda') }}
     - cuda-cudart-dev
     - libcublas-dev
-    - cunumeric  # only a build dependency to help resolver
+    - cupynumeric  # only a build dependency to help resolver
 
 requirements:
   build:
@@ -56,9 +56,9 @@ requirements:
     - legate {{ legate_version }}
     - legate-dataframe {{ legatedataframe_version }}
     # Only to ensure a nightly legate version we pick up
-    # is compatible with an existing cunumeric version.
+    # is compatible with an existing cupynumeric version.
     # (may also stabilize not using debug/sanitizer builds)
-    - cunumeric
+    - cupynumeric
     - cython>=3.0.0
     - libcublas-dev
     - python
