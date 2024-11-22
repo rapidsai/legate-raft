@@ -1,0 +1,247 @@
+# Dependency list for https://github.com/rapidsai/dependency-file-generator
+files:
+  all:
+    output: conda
+    matrix:
+      cuda: ["12.5"]
+      arch: [x86_64]
+    includes:
+      - benchmark
+      - benchmark_analysis
+      - build
+      - checks
+      - cuda
+      - cuda_version
+      - depends_on_cupy
+      - depends_on_legate
+      - depends_on_legate-dataframe
+      - depends_on_libraft
+      - depends_on_librmm
+      - docs
+      - py_version
+      - run
+      - test
+  py_docs:
+    output: none
+    includes:
+      - py_version
+      - docs
+  py_build:
+    output: pyproject
+    pyproject_dir: .
+    extras:
+      table: build-system
+    includes:
+      - build
+      - depends_on_legate
+      - depends_on_legate-dataframe
+      - depends_on_libraft
+      - depends_on_librmm
+  py_run:
+    output: pyproject
+    pyproject_dir: .
+    extras:
+      table: project
+    includes:
+      - depends_on_cupy
+      - depends_on_legate
+      - depends_on_legate-dataframe
+      - depends_on_libraft
+      - depends_on_librmm
+      - run
+  py_test:
+    output: pyproject
+    pyproject_dir: .
+    extras:
+      table: project.optional-dependencies
+      key: test
+    includes:
+      - test
+  test_python:
+    output: none
+    includes:
+      - depends_on_cupy
+      - py_version
+      - test
+channels:
+  - rapidsai
+  - legate
+  - legate/label/experimental
+  - conda-forge
+  - nvidia
+dependencies:
+  build:
+    common:
+      - output_types: [conda, requirements, pyproject]
+        packages:
+          - cmake>=3.26.4,!=3.30.0
+          - cython>=3.0.0
+          - ninja
+          - scikit-build>=0.18.0
+          - setuptools>=70.0
+      - output_types: [conda]
+        packages:
+          - c-compiler
+          - cxx-compiler
+          - make
+    specific:
+      - output_types: conda
+        matrices:
+          - matrix:
+              arch: x86_64
+            packages:
+              - gcc_linux-64=11.*
+              - sysroot_linux-64==2.17
+      - output_types: conda
+        matrices:
+          - matrix:
+              cuda: "12.*"
+            packages:
+              - cuda-nvcc
+
+  cuda_version:
+    specific:
+      - output_types: conda
+        matrices:
+          - matrix:
+              cuda: "12.5"
+            packages:
+              - cuda-version=12.5
+
+  cuda:
+    specific:
+      - output_types: conda
+        matrices:
+          - matrix:
+              cuda: "12.*"
+            packages:
+              - cuda-nvtx-dev
+              - cuda-cudart-dev
+              - cuda-profiler-api
+              - cuda-nvrtc-dev
+
+  py_version:
+    specific:
+      - output_types: conda
+        matrices:
+          - matrix:
+              py: "3.10"
+            packages:
+              - python=3.10
+          - matrix:
+              py: "3.11"
+            packages:
+              - python=3.11
+          - matrix:
+            packages:
+              - python>=3.10,<3.12
+
+  benchmark:
+    common:
+      - output_types: conda
+        packages:
+          - click
+          - gitpython
+          - mpi4py
+          - pandas
+
+  benchmark_analysis:
+    common:
+      - output_types: conda
+        packages:
+          - jupyter
+          - gitpython
+          - matplotlib
+          - pandas
+
+  checks:
+    common:
+      - output_types: [conda, requirements]
+        packages:
+          - pre-commit
+
+  docs:
+    common:
+      - output_types: [conda, pyproject, requirements]
+        packages:
+          - myst-parser>=4.0
+          - pydata-sphinx-theme>=0.16.0
+          - sphinx>=8.0
+      - output_types: [conda]
+        packages:
+          - make
+
+  run:
+    common:
+      - output_types: [conda, pyproject, requirements]
+        packages:
+          - numpy >=1.23,<3.0.0a0
+          - scipy
+
+  test:
+    common:
+      - output_types: [conda, requirements, pyproject]
+        packages:
+          - pytest>=7.0
+          - cunumeric==25.01.*,>=0.0.0.dev0
+          - hypothesis>=6
+          - scikit-learn
+          - joblib
+
+  depends_on_cupy:
+    common:
+      - output_types: conda
+        packages:
+          - cupy>=12.0.0
+    specific:
+      - output_types: [requirements, pyproject]
+        matrices:
+          - matrix: {cuda: "12.*"}
+            packages: &cupy_packages_cu12
+              - cupy-cuda12x>=12.0.0
+          - {matrix: null, packages: *cupy_packages_cu12}
+
+  depends_on_legate:
+    common:
+      - output_types: [conda, pyproject, requirements]
+        packages:
+          - legate==25.01.*,>=0.0.0.dev0
+
+  depends_on_legate-dataframe:
+    common:
+      - output_types: [conda, pyproject, requirements]
+        packages:
+          - legate-dataframe==24.09.*,>=0.0.0.dev0
+
+  depends_on_libraft:
+    common:
+      - output_types: conda
+        packages:
+          - &libraft_unsuffixed libraft==24.08.*,>=0.0.0a0
+    specific:
+      - output_types: [requirements, pyproject]
+        matrices:
+          - matrix:
+              cuda: "12.*"
+              cuda_suffixed: "true"
+            packages:
+              - libraft-cu12==24.08.*,>=0.0.0a0
+          - {matrix: null, packages: [*libraft_unsuffixed]}
+
+  depends_on_librmm:
+    common:
+      - output_types: conda
+        packages:
+          - &librmm_unsuffixed librmm==24.08.*,>=0.0.0a0
+          - libucxx  # May only be a workaround for an issue fixed in ucx 1.16.x
+    specific:
+      - output_types: [requirements, pyproject]
+        matrices:
+          - matrix:
+              cuda: "12.*"
+              cuda_suffixed: "true"
+            packages:
+              - librmm-cu12==24.08.*,>=0.0.0a0
+          - matrix:
+            packages:
+              - *librmm_unsuffixed

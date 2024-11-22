@@ -1,0 +1,104 @@
+# Copyright (c) 2024, NVIDIA CORPORATION.
+
+{% set pyproject_data = load_file_data("pyproject.toml") %}
+{% set version = environ['LEGATERAFT_PACKAGE_VERSION'] %}
+{% set py_version = environ['CONDA_PY'] %}
+{% set project_data = pyproject_data["project"] %}
+{% set project_urls = project_data["urls"] %}
+{% set cuda_version = '.'.join(environ['RAPIDS_CUDA_VERSION'].split('.')[:2]) %}
+{% set cuda_major = cuda_version.split('.')[0] %}
+
+package:
+  name: legate-raft
+  version: {{ version }}
+
+source:
+  path: ../../..
+
+build:
+  string: "cuda{{ cuda_major }}_py{{ py_version }}_{{ PKG_BUILDNUM }}"
+  script_env:
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+    - AWS_SESSION_TOKEN
+    - CMAKE_C_COMPILER_LAUNCHER
+    - CMAKE_CUDA_COMPILER_LAUNCHER
+    - CMAKE_CXX_COMPILER_LAUNCHER
+    - CMAKE_GENERATOR
+    - CONDA_OVERRIDE_CUDA
+    - CUDAARCHS
+    - PARALLEL_LEVEL
+    - SCCACHE_BUCKET
+    - SCCACHE_IDLE_TIMEOUT
+    - SCCACHE_REGION
+    - SCCACHE_S3_KEY_PREFIX=legate-raft-aarch64 # [aarch64]
+    - SCCACHE_S3_KEY_PREFIX=legate-raft-linux64 # [linux64]
+    - SCCACHE_S3_USE_SSL
+    - SCCACHE_S3_NO_CREDENTIALS
+  ignore_run_exports_from:
+    - {{ compiler('cuda') }}
+    - cuda-cudart-dev
+    - libcublas-dev
+    - cunumeric  # only a build dependency to help resolver
+
+requirements:
+  build:
+    - cmake {{ cmake_version }}
+    - ninja
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ compiler('cuda') }}
+    - cuda-version ={{ cuda_version }}
+    - {{ stdlib("c") }}
+  host:
+    - cuda-version ={{ cuda_version }}
+    - cuda-cudart-dev
+    - legate {{ legate_version }}
+    - legate-dataframe {{ legatedataframe_version }}
+    # Only to ensure a nightly legate version we pick up
+    # is compatible with an existing cunumeric version.
+    # (may also stabilize not using debug/sanitizer builds)
+    - cunumeric
+    - cython>=3.0.0
+    - libcublas-dev
+    - python
+    - pip
+    - scikit-build >=0.18.0
+    - setuptools >=70.0
+    - libraft {{ rapids_version }}
+    - librmm {{ rapids_version }}
+    - libucxx  # May only be a workaround for an issue fixed in ucx 1.16.x
+  run:
+    - python
+    # cuda-version is used to constrain __cuda
+    - {{ pin_compatible('cuda-version', max_pin='x', min_pin='x') }}
+    - cuda-cudart
+    - libcublas
+    - __cuda
+    # Relying on run_exports from legate to pin an appropriate range of versions.
+    #
+    # legate uses {{ pin_subpackage(name, min_pin="x.x.x", max_pin="x.x.x") }}, which means
+    # that if legate-raft builds against, say, legate=24.09.0 and then a legate=24.09.1 is
+    # released, a new legate-raft would be required.
+    - legate
+    - legate-dataframe {{ legatedataframe_version }}
+    - numpy >=1.23,<3.0.0a0
+    - scipy
+    - rmm {{ rapids_version }}
+    - libraft {{ rapids_version }}
+
+test:
+  # import tests at build time do not work for the CUDA packages,
+  # because builds happen on machines without a GPU.  So no tests.
+  commands:
+    - pip show legate-raft
+
+about:
+  # home: {{ project_urls["Homepage"] }}
+  dev_url: {{ project_urls["Repository"] }}
+  # doc_url: {{ project_urls["Documentation"] }}
+  license: {{ project_data["license"]["text"] }}
+  license_family: Apache
+  license_file: LICENSE
+  license_url: {{ project_urls["License"] }}
+  summary: {{ project_data["description"] }}

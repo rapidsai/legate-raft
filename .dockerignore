@@ -1,0 +1,7 @@
+*.code-workspace
+*.ipynb
+.VSCodeCounter/*
+.dockerignore
+.vscode/*
+cpp/build/
+legate_prof*/

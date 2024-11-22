@@ -1,0 +1,32 @@
+c_compiler_version:
+  - 11
+
+cxx_compiler_version:
+  - 11
+
+c_stdlib:
+  - sysroot
+
+c_stdlib_version:
+  - "2.17"
+
+cmake_version:
+  - ">=3.26.4,!=3.30.0"
+
+cuda_compiler:
+  - cuda-nvcc
+
+cuda11_compiler:
+  - nvcc
+
+legate_version:
+  # We want 24.09/24.11, but need >24.09.00.dev329 to work
+  # with dataframe, boost, and raft.  This doesn't exist.
+  # Also force a _ucx version because _gex depends on MPI and fails.
+  - "=25.01.*,>=0.0.0.dev0 =*_ucx*"
+
+legatedataframe_version:
+  - "=24.09.*,>=0.0.0.dev0"
+
+rapids_version:
+  - =24.08.*
