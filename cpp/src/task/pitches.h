@@ -14,7 +14,7 @@
  *
  */
 
-// Copied from cunumeric/src/cunumeric/pitches.h.
+// Copied from cupynumeric/src/cupynumeric/pitches.h.
 
 #pragma once
 

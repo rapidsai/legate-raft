@@ -1,7 +1,7 @@
 # Copyright (c) 2024, NVIDIA CORPORATION. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-import cunumeric as cn
+import cupynumeric as cn
 import numpy as np
 import pytest
 
@@ -25,7 +25,7 @@ def test_knn(n_index_rows, n_features, k, dtype):
     metric = "l2"
 
     X, _ = make_blobs(n_index_rows + n_search_rows, n_features, centers=5)
-    # cunumeric makes casting easier and allows using `np.asarray`
+    # cupynumeric makes casting easier and allows using `np.asarray`
     X = cn.asarray(X).astype(np.float64)
     index = X[:n_index_rows, :]
     search = X[n_index_rows:, :]

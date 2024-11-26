@@ -20,13 +20,10 @@ cuda11_compiler:
   - nvcc
 
 legate_version:
-  # We want 24.09/24.11, but need >24.09.00.dev329 to work
-  # with dataframe, boost, and raft.  This doesn't exist.
-  # Also force a _ucx version because _gex depends on MPI and fails.
-  - "=25.01.*,>=0.0.0.dev0 =*_ucx*"
+  - =24.11.01
 
 legatedataframe_version:
-  - "=24.09.*,>=0.0.0.dev0"
+  - =24.11.*
 
 rapids_version:
   - =24.08.*

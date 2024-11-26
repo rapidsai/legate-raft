@@ -8,18 +8,20 @@ of naive bayes, knn, and kmeans.
 
 Legate-raft is available as an anaconda package and can be installed using:
 ```bash
-conda install -c legate/label/experimental -c rapidsai -c conda-forge legate-raft
+conda install -c legate -c rapidsai -c conda-forge legate-raft
 ```
+To include development releases add the `legate/label/experimental` channel.
 
 ## Building
 
 The `legate-raft` library depends on [`legate-dataframe`](https://github.com/rapidsai/legate-dataframe),
-which in turn depends on `legate` and `cunumeric`.
+which in turn depends on `legate` and `cupynumeric`.
 
 In most cases, you should not have to compile these from scratch.  You can
 create a local development environment using conda:
 ```bash
 conda env create -f conda/environments/all_cuda-125_arch-x86_64.yaml -n legate-raft-dev
+conda activate legate-raft-dev
 ```
 This will install all build and test requirements.
 
