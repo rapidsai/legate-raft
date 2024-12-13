@@ -95,7 +95,7 @@ rapids_export(INSTALL legate_raft
 # build export targets
 rapids_export(BUILD legate_raft
   EXPORT_SET legate_raft-export
-  GLOBAL_TARGETS legateboote
+  GLOBAL_TARGETS legate_raft
   NAMESPACE legate::)
 
 if(SKBUILD)

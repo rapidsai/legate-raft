@@ -76,6 +76,7 @@ cmake.version = "CMakeLists.txt"
 minimum-version = "build-system.requires"
 ninja.make-fallback = true
 sdist.exclude = ["*tests*"]
+sdist.include = ["legate_raft/install_info.py"]
 sdist.reproducible = true
 wheel.packages = ["legate_raft"]
 
