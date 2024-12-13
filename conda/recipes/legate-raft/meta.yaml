@@ -59,12 +59,12 @@ requirements:
     # is compatible with an existing cupynumeric version.
     # (may also stabilize not using debug/sanitizer builds)
     - cupynumeric
-    - cython>=3.0.0
     - libcublas-dev
     - python
     - pip
-    - scikit-build >=0.18.0
-    - setuptools >=70.0
+    - cython >=3.0.3
+    - rapids-build-backend >=0.3.0,<0.4.0.dev0
+    - scikit-build-core >=0.10.0
     - libraft {{ rapids_version }}
     - librmm {{ rapids_version }}
     - libucxx  # May only be a workaround for an issue fixed in ucx 1.16.x

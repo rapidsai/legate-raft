@@ -20,10 +20,10 @@ cuda11_compiler:
   - nvcc
 
 legate_version:
-  - =24.11.01
+  - "=25.01.*,>=0.0.0.dev0"
 
 legatedataframe_version:
-  - =24.11.*
+  - "=25.01.*,>=0.0.0.dev0"
 
 rapids_version:
-  - =24.08.*
+  - 24.10.*
