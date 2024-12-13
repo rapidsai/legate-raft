@@ -54,4 +54,4 @@ cmake --build . -v -j${PARALLEL_LEVEL}
 cmake --install . --prefix ${INSTALL_PREFIX}
 
 cd ../..
-python -m pip install . --no-build-isolation --no-deps
+python -m pip install . --no-build-isolation --no-deps --config-settings rapidsai.disable-cuda=true

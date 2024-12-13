@@ -9,6 +9,7 @@ files:
       - benchmark
       - benchmark_analysis
       - build
+      - rapids_build_skbuild
       - checks
       - cuda
       - cuda_version
@@ -31,6 +32,14 @@ files:
     pyproject_dir: .
     extras:
       table: build-system
+    includes:
+      - rapids_build_skbuild
+  py_rapids_build:
+    output: pyproject
+    pyproject_dir: .
+    extras:
+      table: tool.rapids-build-backend
+      key: requires
     includes:
       - build
       - depends_on_legate
@@ -76,10 +85,8 @@ dependencies:
       - output_types: [conda, requirements, pyproject]
         packages:
           - cmake>=3.26.4,!=3.30.0
-          - cython>=3.0.0
+          - cython>=3.0.3
           - ninja
-          - scikit-build>=0.18.0
-          - setuptools>=70.0
       - output_types: [conda]
         packages:
           - c-compiler
@@ -99,6 +106,18 @@ dependencies:
               cuda: "12.*"
             packages:
               - cuda-nvcc
+
+  rapids_build_skbuild:
+    common:
+      - output_types: [conda, requirements, pyproject]
+        packages:
+          - rapids-build-backend>=0.3.2,<0.4.0.dev0
+      - output_types: conda
+        packages:
+          - scikit-build-core>=0.10.0
+      - output_types: [requirements, pyproject]
+        packages:
+          - scikit-build-core[pyproject]>=0.10.0
 
   cuda_version:
     specific:
