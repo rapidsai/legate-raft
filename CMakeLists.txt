@@ -11,7 +11,7 @@
 # or implied. See the License for the specific language governing permissions and limitations under
 # the License.
 
-set(RAPIDS_VERSION "24.08")
+set(RAPIDS_VERSION "24.10")
 
 cmake_minimum_required(VERSION 3.23.1 FATAL_ERROR)
 
