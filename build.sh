@@ -3,10 +3,35 @@
 # Copyright (c) 2023, NVIDIA CORPORATION.
 # SPDX-License-Identifier: Apache-2.0
 
-# raft empty project template build script
+set -e -E -u -o pipefail
 
-# Abort script on first error
-set -e
+NUMARGS=$#
+ARGS=$*
+
+HELP="$0 [<target> ...] [<flag> ...]
+
+  Build legate-raft components.
+
+ where <target> is any of:
+
+    clean              - remove any build files
+    liblegateraft     - build only the liblegateraft.so shared library
+    legate-raft        - build and 'pip install' the legate-raft Python package
+
+ where <flag> is any of:
+
+   -h | --help       - print the help text
+"
+
+function hasArg {
+    (( NUMARGS != 0 )) && (echo " ${ARGS} " | grep -q " $1 ")
+}
+
+if hasArg -h || hasArg --help; then
+    echo "${HELP}"
+    exit 0
+fi
+
 
 INSTALL_PREFIX=${INSTALL_PREFIX:=${PREFIX:=${CONDA_PREFIX}}}
 
@@ -29,7 +54,7 @@ if [[ ${RAFT_REPO_REL} != "" ]]; then
 fi
 
 # If clean given, run it prior to any other steps
-if [ "$1" == "clean" ]; then
+if hasArg clean; then
     # If the dirs to clean are mounted dirs in a container, the
     # contents should be removed but the mounted dirs will remain.
     # The find removes all contents but leaves the dirs, the rmdir
@@ -52,23 +77,24 @@ fi
 # ref: https://cmake.org/cmake/help/latest/variable/CMAKE_CUDA_ARCHITECTURES.html
 declare -r CMAKE_CUDA_ARCHITECTURES="${CUDAARCHS:-native}"
 
-mkdir -p "${BUILD_DIR}"
+if hasArg liblegateraft; then
+    echo "building liblegateraft..."
+    cmake \
+    -B "${BUILD_DIR}" -S "${REPODIR}" \
+    -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+    -DRAFT_NVTX=OFF \
+    -DCMAKE_CUDA_ARCHITECTURES="${CMAKE_CUDA_ARCHITECTURES}" \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+    -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
+    ${EXTRA_CMAKE_ARGS} \
+    .
 
-cmake \
- -B "${BUILD_DIR}" -S "${REPODIR}" \
- -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
- -DRAFT_NVTX=OFF \
- -DCMAKE_CUDA_ARCHITECTURES="${CMAKE_CUDA_ARCHITECTURES}" \
- -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
- -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
- ${EXTRA_CMAKE_ARGS} \
- .
+    cmake --build "${BUILD_DIR}" -v -j${PARALLEL_LEVEL}
+    cmake --build "${BUILD_DIR}" --target install
+fi
 
-cmake --build "${BUILD_DIR}" -v -j${PARALLEL_LEVEL}
-cmake --build "${BUILD_DIR}" --target install
-
-# Build and install the legate-raft Python package
-# TODO: This currently always rebuilds things, which it should not!?
-#       and for all I know, it may not be using the quite right config
-CMAKE_BUILD_PARALLEL_LEVEL="${PARALLEL_LEVEL:-1}" \
-python -m pip install . --no-build-isolation --no-deps --config-settings rapidsai.disable-cuda=true -v
+if (( NUMARGS == 0 )) || hasArg legate-raft; then
+    echo "building legate-raft Python package..."
+    CMAKE_BUILD_PARALLEL_LEVEL="${PARALLEL_LEVEL:-1}" \
+    python -m pip install . --no-build-isolation --no-deps --config-settings rapidsai.disable-cuda=true -v
+fi
