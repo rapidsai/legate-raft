@@ -16,7 +16,7 @@ HELP="$0 [<target> ...] [<flag> ...]
 
     clean              - remove any build files
     liblegateraft     - build only the liblegateraft.so shared library
-    legate-raft        - build and 'pip install' the legate-boost Python package
+    legate-raft        - build and 'pip install' the legate-raft Python package
 
  where <flag> is any of:
 
