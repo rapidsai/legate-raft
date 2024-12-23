@@ -85,7 +85,6 @@ dependencies:
       - output_types: [conda, requirements, pyproject]
         packages:
           - cmake>=3.26.4,!=3.30.0
-          - cython>=3.0.3
           - ninja
       - output_types: [conda]
         packages:
@@ -171,7 +170,6 @@ dependencies:
         packages:
           - jupyter
           - gitpython
-          - matplotlib
           - pandas
 
   checks:

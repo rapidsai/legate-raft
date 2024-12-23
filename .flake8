@@ -1,0 +1,13 @@
+# Copyright (c) 2024, NVIDIA CORPORATION.
+
+[flake8]
+exclude = __init__.py, *.egg, build, docs, .git
+filename = *.py, *.pyx, *.pxd, *.pxi
+ignore =
+    # whitespace before :
+    E203,
+    # do not compare types, for exact checks us 'is' / 'is not'
+    E721,
+    # line break before binary operator
+    W503
+max-line-length = 88

@@ -62,7 +62,6 @@ requirements:
     - libcublas-dev
     - python
     - pip
-    - cython >=3.0.3
     - rapids-build-backend >=0.3.0,<0.4.0.dev0
     - scikit-build-core >=0.10.0
     - libraft {{ rapids_version }}
