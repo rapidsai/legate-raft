@@ -56,7 +56,6 @@ dependencies-file = "dependencies.yaml"
 matrix-entry = "cuda_suffixed=true"
 requires = [
     "cmake>=3.26.4,!=3.30.0",
-    "cython>=3.0.3",
     "legate-dataframe==25.01.*,>=0.0.0.dev0",
     "legate==25.01.*,>=0.0.0.dev0",
     "libraft==24.10.*,>=0.0.0a0",
@@ -82,3 +81,6 @@ wheel.packages = ["legate_raft"]
 
 [tool.codespell]
 ignore-words-list = "coo,indext,thirdparty"
+
+[tool.isort]
+profile = "black"
