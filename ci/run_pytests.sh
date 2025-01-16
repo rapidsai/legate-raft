@@ -26,6 +26,7 @@ cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")"/../legate_raft/test/
 LEGATE_TEST=${LEGATE_TEST:-1} \
 legate \
     --gpus "$(nvidia-smi -L | wc -l)"\
+    --fbmem=4000 \
     --module pytest \
     . \
     -sv \

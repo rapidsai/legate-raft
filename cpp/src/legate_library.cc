@@ -11,6 +11,7 @@
  */
 
 #include <legate_library.h>
+#include <mapper.h>
 
 namespace legate_raft {
 
@@ -26,7 +27,8 @@ Legion::Logger log_legate_raft(library_name);
 
 void registration_callback()
 {
-  auto context = legate::Runtime::get_runtime()->create_library(library_name);
+  auto context = legate::Runtime::get_runtime()->create_library(
+    library_name, legate::ResourceConfig{}, std::make_unique<LegateRaftMapper>());
 
   Registry::get_registrar().register_all_tasks(context);
 }

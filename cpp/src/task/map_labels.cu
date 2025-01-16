@@ -157,6 +157,8 @@ struct map_labels_fn_gpu {
 
 class MapLabelsTask : public Task<MapLabelsTask, MAP_LABELS> {
  public:
+  static constexpr auto GPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
+
   static void cpu_variant(legate::TaskContext context)
   {
     auto labels  = context.input(0);
