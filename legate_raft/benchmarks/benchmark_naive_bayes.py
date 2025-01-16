@@ -1,4 +1,4 @@
-# Copyright 2023 NVIDIA Corporation
+# Copyright 2023-2025 NVIDIA Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -161,7 +161,7 @@ def benchmark_naive_bayes(
 
     results = []
     for iteration in range(num_iterations):
-        click.echo(f"Running iteration {iteration+1}/{num_iterations}")
+        click.echo(f"Running iteration {iteration + 1} / {num_iterations}")
         gc.collect()
         result = _run_benchmark(
             r_scale=r_scale,
