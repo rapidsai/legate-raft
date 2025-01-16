@@ -229,6 +229,8 @@ static void knn_impl(raft::handle_t handle,
 
 class RAFT_KNN_TASK : public Task<RAFT_KNN_TASK, RAFT_KNN> {
  public:
+  static constexpr auto GPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
+
   static void gpu_variant(legate::TaskContext context)
   {
     legate_raft::GPUTaskContext task_context{context};

@@ -93,6 +93,8 @@ static void fit_impl(raft::handle_t const& handle,
 
 class RAFT_KMEANS_FIT_TASK : public Task<RAFT_KMEANS_FIT_TASK, RAFT_KMEANS_FIT> {
  public:
+  static constexpr auto GPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
+
   static void gpu_variant(legate::TaskContext context)
   {
     legate_raft::GPUTaskContext task_context{context};

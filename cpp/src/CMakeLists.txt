@@ -13,7 +13,6 @@ add_library(
         # Legate tasks
         task/add.cu
         task/argmax.cu
-        # task/compute_1nn.cc  # file does not exist
         task/add_constant.cu
         task/bincount.cu
         task/categorize.cc
@@ -40,13 +39,13 @@ add_library(
         task/power.cu
         task/range.cc
         task/rng.cu
-        # task/sparse_coo_mm.cu  # BLOCKED: remove_transform()!
         task/sum_over_axis.cu
         task/tfidf.cu
         task/unique.cu
 
         # Library templates
         legate_library.cc
+        mapper.cc
 )
 
 target_include_directories(legate_raft

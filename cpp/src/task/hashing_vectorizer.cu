@@ -131,6 +131,8 @@ __global__ void sparsify(int32_t* output,
 
 class HashingVectorizerTask : public Task<HashingVectorizerTask, HASHING_VECTORIZER> {
  public:
+  static constexpr auto GPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
+
   static void gpu_variant(legate::TaskContext ctx)
   {
     legate_raft::GPUTaskContext gpu_task_context{ctx};

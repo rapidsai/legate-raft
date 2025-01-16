@@ -173,6 +173,8 @@ struct naive_bayes_fn_gpu {
 
 class NaiveBayesTask : public Task<NaiveBayesTask, NAIVE_BAYES> {
  public:
+  static constexpr auto GPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
+
   static void gpu_variant(legate::TaskContext context)
   {
     auto A_row            = context.input(0);

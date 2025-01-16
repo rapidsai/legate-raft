@@ -34,6 +34,8 @@ namespace legate_raft {
 
 class MakeRmatTask : public Task<MakeRmatTask, MAKE_RMAT> {
  public:
+  static constexpr auto GPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
+
   static void gpu_variant(legate::TaskContext context)
   {
     legate_raft::GPUTaskContext task_context{context};
