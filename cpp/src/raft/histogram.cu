@@ -22,10 +22,6 @@
 #include <raft/distance/distance.cuh>
 #include <raft/random/make_blobs.cuh>
 
-#ifdef RAFT_COMPILED
-#include <raft/distance/specializations.cuh>
-#endif
-
 void test_histogram()
 {
   raft::device_resources handle;
