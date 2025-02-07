@@ -14,40 +14,24 @@
 #
 
 from ._version import __version__
-from .array_api import (
-    add,
-    argmax,
-    divide,
-    exp,
-    fill,
-    log,
-    negative,
-    srange,
-    subtract,
-    sum_over_axis,
-    unique,
-)
+from .array_api import add, fill, log, negative, srange, subtract, sum_over_axis, unique
 from .core import as_array, as_scalar, as_store, convert, copy
 from .knn import run_knn
-from .multiarray import bincount, categorize, matmul, multiply
+from .multiarray import bincount, multiply
 from .sparse.tfidf import TfidfTransformer
 
 __all__ = [
     "TfidfTransformer",
     "add",
-    "argmax",
-    "divide",
     "as_array",
     "as_scalar",
     "as_store",
     "bincount",
-    "categorize",
     "convert",
     "copy",
     "exp",
     "fill",
     "log",
-    "matmul",
     "multiply",
     "negative",
     "run_knn",

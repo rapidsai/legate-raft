@@ -140,17 +140,6 @@ def convert(input: LogicalStore, dtype: DataType) -> LogicalStore:
     return result
 
 
-def copy(input: LogicalStore) -> LogicalStore:
-    result = legate_runtime.create_store(input.type, input.shape)
-    task = legate_runtime.create_auto_task(library, OpCode.COPY)
-    task.add_input(input)
-    task.add_output(result)
-    task.add_alignment(input, result)
-    task.execute()
-
-    return result
-
-
 def to_scalar(input: LogicalStore) -> Number:
     """Extracts a Python scalar value from a Legate store
        encapsulating a single scalar

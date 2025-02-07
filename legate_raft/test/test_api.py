@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import numpy as np
-import pytest
 from hypothesis import example, given, note, settings
 from hypothesis import strategies as st
 from hypothesis.extra.numpy import array_shapes, arrays, from_dtype
@@ -21,7 +20,7 @@ from legate.core import get_legate_runtime
 from numpy.testing import assert_array_almost_equal_nulp, assert_array_equal
 from scipy.sparse import coo_array
 
-from legate_raft import argmax, fill, log, sum_over_axis
+from legate_raft import fill, log, sum_over_axis
 from legate_raft.core import as_array, as_store
 from legate_raft.sparse import COOStore
 
@@ -89,45 +88,6 @@ def test_sum_over_axis(A):
     # Assert allclose doesn't like an `rtol` vector it seems.
     assert result_np.shape == result_lg.shape
     assert np.allclose(result_np, result_lg, rtol=rtol)
-
-
-@settings(deadline=None)
-@given(
-    A=arrays(
-        dtype=np.float32,
-        elements=from_dtype(np.dtype("f"), allow_nan=False),
-        shape=array_shapes(min_dims=2, max_dims=2, min_side=4, max_side=20),
-    )
-)
-def test_argmax(A):
-    assert A.ndim == 2
-    result_np = np.argmax(A, axis=1)
-    result_lg = as_array(argmax(as_store(A), axis=1))
-    assert_array_equal(result_np, result_lg)
-
-
-@pytest.mark.xfail(reason="The coo_mm implementation is currently broken.")
-def test_coo_matmat():
-    A = coo_array(
-        [
-            [0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0],
-            [0, 2, 3, 0, 0],
-            [0, 0, 0, 4, 0],
-        ],
-        dtype=np.float32,
-    )
-
-    B = np.array(
-        [[1, 0, 0, 0], [0, 2, 3, 0], [0, 0, 0, 4], [0, 0, 0, 5], [0, 0, 0, 6]],
-        dtype=np.float32,
-    )
-
-    C = A @ B
-    A_store = COOStore.from_sparse_array(A)
-    C_store = A_store @ as_store(B)
-
-    assert_array_almost_equal_nulp(C, as_array(C_store))
 
 
 @settings(deadline=None)
