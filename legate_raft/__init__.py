@@ -15,7 +15,7 @@
 
 from ._version import __version__
 from .array_api import add, fill, log, negative, srange, subtract, sum_over_axis, unique
-from .core import as_array, as_scalar, as_store, convert, copy
+from .core import as_array, as_scalar, as_store, convert
 from .knn import run_knn
 from .multiarray import bincount, multiply
 from .sparse.tfidf import TfidfTransformer
@@ -28,7 +28,6 @@ __all__ = [
     "as_store",
     "bincount",
     "convert",
-    "copy",
     "exp",
     "fill",
     "log",
