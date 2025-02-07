@@ -26,7 +26,7 @@ jobs:
       - conda-python-build
       - conda-python-tests
       - docs-build
-    uses: rapidsai/shared-workflows/.github/workflows/pr-builder.yaml@branch-24.10
+    uses: rapidsai/shared-workflows/.github/workflows/pr-builder.yaml@branch-24.12
 
   pre-commit:
     runs-on: ubuntu-latest

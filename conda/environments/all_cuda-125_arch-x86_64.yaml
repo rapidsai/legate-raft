@@ -27,8 +27,8 @@ dependencies:
 - jupyter
 - legate-dataframe==25.01.*,>=0.0.0.dev0
 - legate==25.01.*,>=0.0.0.dev0
-- libraft==24.10.*,>=0.0.0a0
-- librmm==24.10.*,>=0.0.0a0
+- libraft==24.12.*,>=0.0.0a0
+- librmm==24.12.*,>=0.0.0a0
 - libucxx
 - make
 - mpi4py
