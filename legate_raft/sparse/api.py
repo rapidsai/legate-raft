@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import warnings
 from dataclasses import dataclass
 from typing import Union
 
@@ -21,12 +20,8 @@ from legate.core import types as ty
 from scipy.sparse import coo_array, coo_matrix, csr_array, csr_matrix
 
 from legate_raft.core import as_store
-from legate_raft.core import copy as copy_store
 
-from ..array_api import fill
-from ..cffi import OpCode
 from ..core import as_array, convert
-from ..library import user_context as library
 
 SparseArray = Union[csr_array, csr_matrix, coo_array, coo_matrix]
 
@@ -105,14 +100,6 @@ class COOStore:
         assert self.row.shape == self.col.shape == self.data.shape
         return self.data.shape[0]
 
-    def __matmul__(self, other):
-        if isinstance(other, LogicalStore):
-            return _coo_mm(self, other)
-        else:
-            raise NotImplementedError(
-                f"Matrix multiplication for type {type(other)} is not supported."
-            )
-
     def __len__(self):
         if self.ndim > 0:
             return self.shape[0]
@@ -144,61 +131,3 @@ SparseStore = COOStore
 
 def as_sparse_store(array: SparseArray) -> SparseStore:
     return COOStore.from_sparse_array(array)
-
-
-def _coo_mm(A: COOStore, B: LogicalStore) -> LogicalStore:
-    raise NotImplementedError("The implementation appears to be broken at the moment.")
-
-    # if B.transformed and not legate_runtime.runtime.machine.only(ProcessorKind.CPU):
-    if B.transformed:
-        # Need to create copy of transposed matrix, since the matrix operand in
-        # A @ B must be contiguous for the non-CPU task variants.
-        warnings.warn(
-            "Creating copy of operand B for matrix multiplication "
-            "as it must be contiguous.",
-            UserWarning,
-        )
-        B = copy_store(B)
-
-    assert A.type == B.type
-
-    m, k = A.shape
-    k_, n = B.shape
-    assert k == k_
-    result_shape = (m, n)
-    print("mkn", m, k, n)
-
-    assert A.type in (ty.float32, ty.float64)
-    C = fill(result_shape, 0, A.type)
-    A_row_promoted = A.row.promote(1, result_shape[1])
-    A_col_promoted = A.col.promote(1, result_shape[1])
-    A_data_promoted = A.data.promote(1, result_shape[1])
-
-    task = legate_runtime.create_auto_task(library, OpCode.SPARSE_COO_MM)
-    # This task is only implemented for these index types.
-    assert A.row.type == A.col.type == ty.uint64
-
-    # Add inputs and outputs
-    print(A_row_promoted.shape, C.shape, A.col.shape, A.data.shape, B.shape)
-    task.add_reduction(C, ty.ReductionOpKind.ADD)
-    task.add_input(A_row_promoted)
-    task.add_input(A_col_promoted)
-    task.add_input(A_data_promoted)
-    task.add_input(B)
-
-    # Partitioning
-    task.add_broadcast(B)
-    task.add_broadcast(A_row_promoted, 1)
-    task.add_alignment(A_row_promoted, A_col_promoted)
-    task.add_alignment(A_row_promoted, A_data_promoted)
-    task.add_alignment(A_row_promoted, C)
-
-    # Scalars
-    task.add_scalar_arg(m, ty.int32)
-    task.add_scalar_arg(k, ty.int32)
-    task.add_scalar_arg(n, ty.int32)
-    task.add_scalar_arg(A.nnz, ty.uint64)
-
-    task.execute()
-
-    return C

@@ -26,4 +26,4 @@ legatedataframe_version:
   - "=25.01.*,>=0.0.0.dev0"
 
 rapids_version:
-  - 24.10.*
+  - 24.12.*

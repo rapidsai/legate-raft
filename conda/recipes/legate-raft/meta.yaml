@@ -53,7 +53,7 @@ requirements:
   host:
     - cuda-version ={{ cuda_version }}
     - cuda-cudart-dev
-    - legate {{ legate_version }}
+    - legate {{ legate_version }} =*_gpu*
     - legate-dataframe {{ legatedataframe_version }}
     # Only to ensure a nightly legate version we pick up
     # is compatible with an existing cupynumeric version.

@@ -6,25 +6,18 @@ add_library(
 
         # RAFT API Wrappers
         raft/distance.cu
-        raft/histogram.cu
         common/gpu_task_context.cu
         raft/raft_kmeans.cu
 
         # Legate tasks
         task/add.cu
-        task/argmax.cu
         task/add_constant.cu
         task/bincount.cu
-        task/categorize.cc
         task/convert.cu
-        task/copy.cu
         task/count_features.cu
-        task/divide_by_constant.cu
-        task/exp.cc
         task/fill.cu
         task/find_max.cc
         task/hashing_vectorizer.cu
-        task/histogram.cc
         task/invert_labels.cu
         task/kmeans_tasks.cu
         task/knn_task.cu
@@ -32,7 +25,6 @@ add_library(
         task/log.cu
         task/make_rmat.cu
         task/map_labels.cu
-        task/matmul.cc
         task/mul.cc
         task/multiply_by_constant.cu
         task/naive_bayes.cu

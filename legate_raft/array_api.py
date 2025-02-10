@@ -14,9 +14,7 @@
 #
 
 
-import builtins
 import math
-import os
 from numbers import Number
 from typing import Union
 
@@ -163,19 +161,6 @@ def log(input: Union[LogicalStore, Number]) -> Union[LogicalStore, Number]:
     return result
 
 
-def exp(input: LogicalStore) -> LogicalStore:
-    result = legate_runtime.create_store(input.type, input.shape)
-
-    task = legate_runtime.create_auto_task(library, OpCode.EXP)
-    task.add_input(input)
-    task.add_output(result)
-    task.add_alignment(input, result)
-
-    task.execute()
-
-    return result
-
-
 def _add_stores(x1: LogicalStore, x2: LogicalStore) -> LogicalStore:
     assert x1.type == x2.type
 
@@ -263,23 +248,6 @@ def multiply(input: LogicalStore, value: Number) -> LogicalStore:
     return result
 
 
-def divide(input: LogicalStore, value: Number) -> LogicalStore:
-    assert isinstance(input, LogicalStore)
-    assert isinstance(value, Number)
-
-    result = legate_runtime.create_store(input.type, input.shape)
-
-    task = legate_runtime.create_auto_task(library, OpCode.DIVIDE_BY_CONSTANT)
-    task.add_input(input)
-    task.add_scalar_arg(value, input.type)
-    task.add_output(result)
-    task.add_alignment(input, result)
-
-    task.execute()
-
-    return result
-
-
 def power(input: LogicalStore, value: Number) -> LogicalStore:
     assert isinstance(input, LogicalStore)
     assert isinstance(value, Number)
@@ -319,37 +287,6 @@ def max(x: LogicalStore, axis: int) -> Number:
     task.execute()
 
     return result
-
-
-def argmax(x: LogicalStore, axis: int) -> LogicalStore:
-    if x.ndim != 2:
-        raise NotImplementedError("argmax() only supports 2-dimensional arrays")
-    if axis != 1:
-        raise NotImplementedError("argmax() can only reduce on axis=1")
-
-    result_shape = (x.shape[0],)
-    result = fill(result_shape, 0, ty.int64)
-    # (1) Work-around the missing remove_transform() function.
-    batch_scale = 10 if int(os.environ.get("LEGATE_TEST", "0")) else 30  # (1)
-    row_scale = builtins.max(0, int(batch_scale - math.log2(x.shape[1])))
-
-    x = x.partition_by_tiling((2**row_scale, x.shape[1]))  # (1)
-    result = result.partition_by_tiling((2**row_scale,))  # (1)
-    n_partitions = x.color_shape[0]  # (1)
-    # result = result.promote(1, x.shape[1])  (1)
-
-    task = legate_runtime.create_manual_task(  # (1)
-        library, OpCode.ARG_MAX, (n_partitions,)
-    )
-    # task = legate_runtime.create_auto_task(library, OpCode.ARG_MAX)  # (1)
-    task.add_input(x)
-    task.add_output(result)
-    # task.add_broadcast(result, 1)  # (1)
-    # task.add_alignment(x, result)  # (1)
-    task.execute()
-
-    return result.store()  # (1)
-    # return result.project(1, 0)  # (1)
 
 
 def unique(input: LogicalStore, radix: int = 8) -> LogicalStore:
