@@ -188,7 +188,9 @@ dependencies:
         packages:
           - myst-parser>=4.0
           - pydata-sphinx-theme>=0.16.0
-          - sphinx>=8.0
+          # sphinx ceiling can be removed when this myst issue is fixed:
+          # "WARNING: Unknown source document '/__w/legate-raft/legate-raft/README'"
+          - sphinx>=8.0,<8.2.0
       - output_types: [conda]
         packages:
           - make

@@ -13,6 +13,6 @@ versions of naive bayes, knn, and kmeans.
    :maxdepth: 2
    :caption: Contents:
 
-   Overview and examples (README) <README.md>
-   Contributing to legate-raft <CONTRIBUTING.md>
+   Overview and examples <README>
+   Contributing to legate-raft <CONTRIBUTING>
    api/index
