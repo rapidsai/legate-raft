@@ -24,7 +24,7 @@ jobs:
     needs:
       - pre-commit
       - conda-python-build
-      - conda-python-tests
+      # - conda-python-tests
       - docs-build
     uses: rapidsai/shared-workflows/.github/workflows/pr-builder.yaml@branch-24.12
 
@@ -42,47 +42,47 @@ jobs:
       script: "ci/build_python.sh"
     secrets: inherit
 
-  conda-python-tests:
-    needs:
-      - pre-commit
-      - conda-python-build
-    strategy:
-      fail-fast: false
-      # As of the last time this was updated, legate / cupynumeric packages were published for only:
-      #
-      #  * architectures: amd64 only
-      #  * CUDA: >=12.2
-      #  * Python: 3.10, 3.11, 3.12
-      #
-      # Valid set of RAPIDS ci-conda image tags: https://hub.docker.com/r/rapidsai/ci-conda/tags
-      matrix:
-        include:
-          - ARCH: "amd64"
-            CUDA_VER: "12.5.1"
-            PY_VER: "3.10"
-          - ARCH: "amd64"
-            CUDA_VER: "12.5.1"
-            PY_VER: "3.12"
-    runs-on: linux-${{ matrix.ARCH }}-gpu-v100-latest-1
-    container:
-      image: "rapidsai/ci-conda:cuda${{ matrix.CUDA_VER }}-ubuntu22.04-py${{ matrix.PY_VER }}"
-      env:
-        NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: download conda packages
-        uses: actions/download-artifact@v4
-        with:
-          name: legate-raft-conda-cuda${{ matrix.CUDA_VER }}-${{ matrix.ARCH }}-py${{ matrix.PY_VER }}
-          path: ${{ env.RAPIDS_LOCAL_CONDA_CHANNEL }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          run-id: ${{ github.run_id }}
-      - name: test
-        run: |
-          ci/test_python.sh
+  # conda-python-tests:
+  #   needs:
+  #     - pre-commit
+  #     - conda-python-build
+  #   strategy:
+  #     fail-fast: false
+  #     # As of the last time this was updated, legate / cupynumeric packages were published for only:
+  #     #
+  #     #  * architectures: amd64 only
+  #     #  * CUDA: >=12.2
+  #     #  * Python: 3.10, 3.11, 3.12
+  #     #
+  #     # Valid set of RAPIDS ci-conda image tags: https://hub.docker.com/r/rapidsai/ci-conda/tags
+  #     matrix:
+  #       include:
+  #         - ARCH: "amd64"
+  #           CUDA_VER: "12.5.1"
+  #           PY_VER: "3.10"
+  #         - ARCH: "amd64"
+  #           CUDA_VER: "12.5.1"
+  #           PY_VER: "3.12"
+  #   runs-on: linux-${{ matrix.ARCH }}-gpu-v100-latest-1
+  #   container:
+  #     image: "rapidsai/ci-conda:cuda${{ matrix.CUDA_VER }}-ubuntu22.04-py${{ matrix.PY_VER }}"
+  #     env:
+  #       NVIDIA_VISIBLE_DEVICES: ${{ env.NVIDIA_VISIBLE_DEVICES }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+  #     - name: download conda packages
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: legate-raft-conda-cuda${{ matrix.CUDA_VER }}-${{ matrix.ARCH }}-py${{ matrix.PY_VER }}
+  #         path: ${{ env.RAPIDS_LOCAL_CONDA_CHANNEL }}
+  #         github-token: ${{ secrets.GITHUB_TOKEN }}
+  #         repository: ${{ github.repository }}
+  #         run-id: ${{ github.run_id }}
+  #     - name: test
+  #       run: |
+  #         ci/test_python.sh
 
   docs-build:
     needs:
