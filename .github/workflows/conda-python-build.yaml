@@ -16,7 +16,7 @@ on:
 # override default permissions
 permissions:
   # needed to auth with AWS for sccache
-  id-token: read
+  id-token: write
 
 env:
   # CUDA architectures to build for
