@@ -13,7 +13,7 @@ sccache --zero-stats
 CMAKE_GENERATOR=Ninja \
 CONDA_OVERRIDE_CUDA="${RAPIDS_CUDA_VERSION}" \
 LEGATERAFT_PACKAGE_VERSION=$(head -1 ./VERSION) \
-rapids-conda-retry mambabuild \
+rapids-conda-retry build \
     --channel legate \
     --channel legate/label/rc \
     --channel legate/label/experimental \
