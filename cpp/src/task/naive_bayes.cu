@@ -173,6 +173,9 @@ struct naive_bayes_fn_gpu {
 
 class NaiveBayesTask : public Task<NaiveBayesTask, NAIVE_BAYES> {
  public:
+   static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{NAIVE_BAYES}};
+
   static constexpr auto GPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
 
   static void gpu_variant(legate::TaskContext context)
@@ -209,9 +212,9 @@ class NaiveBayesTask : public Task<NaiveBayesTask, NAIVE_BAYES> {
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::NaiveBayesTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

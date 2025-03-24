@@ -49,6 +49,9 @@ struct exp_fn {
 
 class ExpTask : public Task<ExpTask, EXP> {
  public:
+   static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{EXP}};
+
   static void cpu_variant(legate::TaskContext context)
   {
     auto input  = context.input(0);
@@ -62,9 +65,9 @@ class ExpTask : public Task<ExpTask, EXP> {
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::ExpTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

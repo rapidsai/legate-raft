@@ -72,6 +72,9 @@ struct uniform_int_fn_gpu {
 
 class UniformIntTask : public Task<UniformIntTask, UNIFORM_INT> {
  public:
+   static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{UNIFORM_INT}};
+
   static void gpu_variant(legate::TaskContext context)
   {
     auto random_seed = context.scalar(0);
@@ -95,9 +98,9 @@ class UniformIntTask : public Task<UniformIntTask, UNIFORM_INT> {
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::UniformIntTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

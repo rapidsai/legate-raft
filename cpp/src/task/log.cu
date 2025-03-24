@@ -129,6 +129,9 @@ struct log_fn_gpu {
 
 class LogTask : public Task<LogTask, LOG> {
  public:
+   static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{LOG}};
+
   static void cpu_variant(legate::TaskContext context)
   {
     auto input  = context.input(0);
@@ -151,9 +154,9 @@ class LogTask : public Task<LogTask, LOG> {
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::LogTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

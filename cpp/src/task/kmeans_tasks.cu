@@ -93,6 +93,9 @@ static void fit_impl(raft::handle_t const& handle,
 
 class RAFT_KMEANS_FIT_TASK : public Task<RAFT_KMEANS_FIT_TASK, RAFT_KMEANS_FIT> {
  public:
+   static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{RAFT_KMEANS_FIT}};
+
   static constexpr auto GPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
 
   static void gpu_variant(legate::TaskContext context)
@@ -147,39 +150,10 @@ static void predict_impl(raft::handle_t handle,
                                              raft::make_host_scalar_view(&inertia));
 }
 
-}  // namespace
-
-class RAFT_KMEANS_PREDICT_TASK : public Task<RAFT_KMEANS_PREDICT_TASK, RAFT_KMEANS_PREDICT> {
- public:
-  static void gpu_variant(legate::TaskContext context)
-  {
-    legate_raft::GPUTaskContext task_context{context};
-
-    auto X         = context.input(0).data();
-    auto centroids = context.input(1).data();
-    auto labels    = context.output(0).data();
-
-    auto handle = task_context.handle();
-
-    if (X.code() == legate::Type::Code::FLOAT32) {
-      predict_impl<float>(handle, X, centroids, labels);
-    } else if (X.code() == legate::Type::Code::FLOAT64) {
-      predict_impl<double>(handle, X, centroids, labels);
-    } else {
-      throw std::invalid_argument("X must be float32 or float64.");
-    }
-  }
-};
-
-}  // namespace legate_raft
-
-namespace  // unnamed
-{
-
-static void __attribute__((constructor)) register_tasks(void)
-{
+const auto reg_id_ = []() -> char {
   legate_raft::RAFT_KMEANS_FIT_TASK::register_variants();
   legate_raft::RAFT_KMEANS_PREDICT_TASK::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

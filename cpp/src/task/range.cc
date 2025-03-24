@@ -48,6 +48,9 @@ struct range_fn {
 
 class RangeTask : public Task<RangeTask, RANGE> {
  public:
+   static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{RANGE}};
+
   static void cpu_variant(legate::TaskContext context)
   {
     auto start  = context.scalar(0);
@@ -63,9 +66,9 @@ class RangeTask : public Task<RangeTask, RANGE> {
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::RangeTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

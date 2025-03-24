@@ -132,6 +132,9 @@ struct add_constant_fn_gpu {
 
 class AddConstantTask : public Task<AddConstantTask, ADD_CONSTANT> {
  public:
+   static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{ADD_CONSTANT}};
+
   static void cpu_variant(legate::TaskContext context)
   {
     auto input  = context.input(0);
@@ -162,9 +165,9 @@ class AddConstantTask : public Task<AddConstantTask, ADD_CONSTANT> {
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::AddConstantTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

@@ -93,6 +93,9 @@ struct convert_fn_gpu {
 
 class ConvertTask : public Task<ConvertTask, CONVERT> {
  public:
+   static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{CONVERT}};
+
   static void cpu_variant(legate::TaskContext context)
   {
     auto input  = context.input(0);
@@ -306,9 +309,9 @@ class ConvertTask : public Task<ConvertTask, CONVERT> {
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::ConvertTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

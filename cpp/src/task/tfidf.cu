@@ -158,6 +158,9 @@ struct tfidf_predict_fn_gpu {
 
 class TfidfFitTask : public Task<TfidfFitTask, TFIDF_FIT> {
  public:
+   static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{TFIDF_FIT}};
+
   static void gpu_variant(legate::TaskContext context)
   {
     auto input      = context.input(0);
@@ -181,6 +184,9 @@ class TfidfFitTask : public Task<TfidfFitTask, TFIDF_FIT> {
 
 class TfidfPredictTask : public Task<TfidfPredictTask, TFIDF_PREDICT> {
  public:
+   static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{TFIDF_PREDICT}};
+
   static void gpu_variant(legate::TaskContext context)
   {
     auto input_cols = context.input(0);
@@ -206,10 +212,10 @@ class TfidfPredictTask : public Task<TfidfPredictTask, TFIDF_PREDICT> {
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::TfidfFitTask::register_variants();
   legate_raft::TfidfPredictTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

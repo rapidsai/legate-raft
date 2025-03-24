@@ -67,6 +67,9 @@ struct find_max_fn_outer {
 
 class FindMaxTask : public Task<FindMaxTask, FIND_MAX> {
  public:
+   static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{FIND_MAX}};
+
   static void cpu_variant(legate::TaskContext context)
   {
     auto input  = context.input(0);
@@ -113,11 +116,7 @@ class FindMaxTask : public Task<FindMaxTask, FIND_MAX> {
 
 }  // namespace legate_raft
 
-namespace {
-
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::FindMaxTask::register_variants();
-}
-
-}  // namespace
+  return 0;
+}();
