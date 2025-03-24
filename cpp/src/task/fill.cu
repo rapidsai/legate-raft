@@ -94,6 +94,8 @@ struct fill_fn_gpu {
 
 class FillTask : public Task<FillTask, FILL> {
  public:
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{FILL}};
+
   static void cpu_variant(legate::TaskContext context)
   {
     auto value  = context.scalar(0);
@@ -117,9 +119,9 @@ class FillTask : public Task<FillTask, FILL> {
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::FillTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

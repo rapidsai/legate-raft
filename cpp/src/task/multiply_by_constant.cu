@@ -111,6 +111,9 @@ struct multiply_by_constant_fn_gpu {
 
 class MultiplyByConstantTask : public Task<MultiplyByConstantTask, MULTIPLY_BY_CONSTANT> {
  public:
+  static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{MULTIPLY_BY_CONSTANT}};
+
   static void cpu_variant(legate::TaskContext context)
   {
     auto input  = context.input(0);
@@ -141,9 +144,9 @@ class MultiplyByConstantTask : public Task<MultiplyByConstantTask, MULTIPLY_BY_C
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::MultiplyByConstantTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

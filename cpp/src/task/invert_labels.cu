@@ -111,6 +111,8 @@ struct invert_labels_fn_gpu {
 
 class InvertLabelsTask : public Task<InvertLabelsTask, INVERT_LABELS> {
  public:
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{INVERT_LABELS}};
+
   static void cpu_variant(legate::TaskContext context)
   {
     auto labels  = context.input(0);
@@ -135,9 +137,9 @@ class InvertLabelsTask : public Task<InvertLabelsTask, INVERT_LABELS> {
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::InvertLabelsTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

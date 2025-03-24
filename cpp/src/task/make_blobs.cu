@@ -34,6 +34,8 @@ namespace legate_raft {
 
 class MAKE_BLOBS_TASK : public Task<MAKE_BLOBS_TASK, MAKE_BLOBS> {
  public:
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{MAKE_BLOBS}};
+
   static void gpu_variant(legate::TaskContext context)
   {
     legate_raft::GPUTaskContext task_context{context};
@@ -76,9 +78,9 @@ class MAKE_BLOBS_TASK : public Task<MAKE_BLOBS_TASK, MAKE_BLOBS> {
 namespace  // unnamed
 {
 
-static void __attribute__((constructor)) register_tasks(void)
-{
+const auto reg_id_ = []() -> char {
   legate_raft::MAKE_BLOBS_TASK::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

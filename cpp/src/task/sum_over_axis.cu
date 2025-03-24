@@ -112,6 +112,8 @@ struct reduction_fn_gpu {
 
 class SumOverAxisTask : public Task<SumOverAxisTask, SUM_OVER_AXIS> {
  public:
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{SUM_OVER_AXIS}};
+
   static void cpu_variant(legate::TaskContext context)
   {
     auto input  = context.input(0);
@@ -134,9 +136,9 @@ class SumOverAxisTask : public Task<SumOverAxisTask, SUM_OVER_AXIS> {
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::SumOverAxisTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

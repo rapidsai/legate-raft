@@ -133,6 +133,9 @@ class HashingVectorizerTask : public Task<HashingVectorizerTask, HASHING_VECTORI
  public:
   static constexpr auto GPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
 
+  static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{HASHING_VECTORIZER}};
+
   static void gpu_variant(legate::TaskContext ctx)
   {
     legate_raft::GPUTaskContext gpu_task_context{ctx};
@@ -251,9 +254,9 @@ class HashingVectorizerTask : public Task<HashingVectorizerTask, HASHING_VECTORI
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::HashingVectorizerTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

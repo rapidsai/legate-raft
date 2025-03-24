@@ -110,6 +110,8 @@ struct power_fn_gpu {
 
 class PowerTask : public Task<PowerTask, POWER> {
  public:
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{POWER}};
+
   static void cpu_variant(legate::TaskContext context)
   {
     auto input  = context.input(0);
@@ -135,9 +137,9 @@ class PowerTask : public Task<PowerTask, POWER> {
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::PowerTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

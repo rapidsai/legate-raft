@@ -143,6 +143,8 @@ struct unique_fn_gpu {
 
 class UniqueTask : public Task<UniqueTask, UNIQUE> {
  public:
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{UNIQUE}};
+
   static constexpr auto CPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
   static constexpr auto GPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
 
@@ -166,9 +168,9 @@ class UniqueTask : public Task<UniqueTask, UNIQUE> {
 
 namespace {
 
-static void __attribute__((constructor)) register_tasks()
-{
+const auto reg_id_ = []() -> char {
   legate_raft::UniqueTask::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace

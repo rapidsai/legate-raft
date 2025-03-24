@@ -93,6 +93,7 @@ static void fit_impl(raft::handle_t const& handle,
 
 class RAFT_KMEANS_FIT_TASK : public Task<RAFT_KMEANS_FIT_TASK, RAFT_KMEANS_FIT> {
  public:
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{RAFT_KMEANS_FIT}};
   static constexpr auto GPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
 
   static void gpu_variant(legate::TaskContext context)
@@ -151,6 +152,9 @@ static void predict_impl(raft::handle_t handle,
 
 class RAFT_KMEANS_PREDICT_TASK : public Task<RAFT_KMEANS_PREDICT_TASK, RAFT_KMEANS_PREDICT> {
  public:
+  static inline const auto TASK_CONFIG =
+    legate::TaskConfig{legate::LocalTaskID{RAFT_KMEANS_PREDICT}};
+
   static void gpu_variant(legate::TaskContext context)
   {
     legate_raft::GPUTaskContext task_context{context};
@@ -176,10 +180,10 @@ class RAFT_KMEANS_PREDICT_TASK : public Task<RAFT_KMEANS_PREDICT_TASK, RAFT_KMEA
 namespace  // unnamed
 {
 
-static void __attribute__((constructor)) register_tasks(void)
-{
+const auto reg_id_ = []() -> char {
   legate_raft::RAFT_KMEANS_FIT_TASK::register_variants();
   legate_raft::RAFT_KMEANS_PREDICT_TASK::register_variants();
-}
+  return 0;
+}();
 
 }  // namespace
