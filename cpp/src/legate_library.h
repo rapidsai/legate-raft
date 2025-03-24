@@ -22,7 +22,7 @@ struct Registry {
 
 template <typename T, int ID>
 struct Task : public legate::LegateTask<T> {
-  using Registrar               = Registry;
+  using Registrar = Registry;
 };
 
 }  // namespace legate_raft

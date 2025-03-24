@@ -132,8 +132,7 @@ struct SourceTypeDispatchCPU {
 
 class BincountTask : public Task<BincountTask, BINCOUNT> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{BINCOUNT}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{BINCOUNT}};
 
   static void gpu_variant(legate::TaskContext context)
   {
@@ -154,7 +153,11 @@ class BincountTask : public Task<BincountTask, BINCOUNT> {
 
 }  // namespace legate_raft
 
+namespace {
+
 const auto reg_id_ = []() -> char {
   legate_raft::BincountTask::register_variants();
   return 0;
 }();
+
+}  // namespace

@@ -130,8 +130,7 @@ struct add_fn_gpu {
 
 class AddTask : public Task<AddTask, ADD> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{ADD}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{ADD}};
 
   static void cpu_variant(legate::TaskContext context)
   {

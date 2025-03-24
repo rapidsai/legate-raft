@@ -158,8 +158,7 @@ struct tfidf_predict_fn_gpu {
 
 class TfidfFitTask : public Task<TfidfFitTask, TFIDF_FIT> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{TFIDF_FIT}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{TFIDF_FIT}};
 
   static void gpu_variant(legate::TaskContext context)
   {
@@ -184,8 +183,7 @@ class TfidfFitTask : public Task<TfidfFitTask, TFIDF_FIT> {
 
 class TfidfPredictTask : public Task<TfidfPredictTask, TFIDF_PREDICT> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{TFIDF_PREDICT}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{TFIDF_PREDICT}};
 
   static void gpu_variant(legate::TaskContext context)
   {

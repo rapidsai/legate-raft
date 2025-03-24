@@ -112,8 +112,7 @@ struct reduction_fn_gpu {
 
 class SumOverAxisTask : public Task<SumOverAxisTask, SUM_OVER_AXIS> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{SUM_OVER_AXIS}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{SUM_OVER_AXIS}};
 
   static void cpu_variant(legate::TaskContext context)
   {

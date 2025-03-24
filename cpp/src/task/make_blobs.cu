@@ -34,8 +34,7 @@ namespace legate_raft {
 
 class MAKE_BLOBS_TASK : public Task<MAKE_BLOBS_TASK, MAKE_BLOBS> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{MAKE_BLOBS}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{MAKE_BLOBS}};
 
   static void gpu_variant(legate::TaskContext context)
   {

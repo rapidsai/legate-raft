@@ -94,8 +94,7 @@ struct fill_fn_gpu {
 
 class FillTask : public Task<FillTask, FILL> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{FILL}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{FILL}};
 
   static void cpu_variant(legate::TaskContext context)
   {

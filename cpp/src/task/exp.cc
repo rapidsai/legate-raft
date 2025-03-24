@@ -49,8 +49,7 @@ struct exp_fn {
 
 class ExpTask : public Task<ExpTask, EXP> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{EXP}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{EXP}};
 
   static void cpu_variant(legate::TaskContext context)
   {

@@ -34,8 +34,7 @@ namespace legate_raft {
 
 class MakeRmatTask : public Task<MakeRmatTask, MAKE_RMAT> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{MAKE_RMAT}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{MAKE_RMAT}};
 
   static constexpr auto GPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
 

@@ -48,8 +48,7 @@ struct mul_fn {
 
 class MultiplyTask : public Task<MultiplyTask, MUL> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{MUL}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{MUL}};
 
   static void cpu_variant(legate::TaskContext context)
   {

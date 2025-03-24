@@ -93,8 +93,7 @@ struct convert_fn_gpu {
 
 class ConvertTask : public Task<ConvertTask, CONVERT> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{CONVERT}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{CONVERT}};
 
   static void cpu_variant(legate::TaskContext context)
   {

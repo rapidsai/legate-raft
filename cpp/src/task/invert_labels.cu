@@ -111,8 +111,7 @@ struct invert_labels_fn_gpu {
 
 class InvertLabelsTask : public Task<InvertLabelsTask, INVERT_LABELS> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{INVERT_LABELS}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{INVERT_LABELS}};
 
   static void cpu_variant(legate::TaskContext context)
   {

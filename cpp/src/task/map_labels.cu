@@ -157,8 +157,7 @@ struct map_labels_fn_gpu {
 
 class MapLabelsTask : public Task<MapLabelsTask, MAP_LABELS> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{MAP_LABELS}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{MAP_LABELS}};
 
   static constexpr auto GPU_VARIANT_OPTIONS = legate::VariantOptions{}.with_has_allocations(true);
 
@@ -184,7 +183,11 @@ class MapLabelsTask : public Task<MapLabelsTask, MAP_LABELS> {
 
 }  // namespace legate_raft
 
+namespace {
+
 const auto reg_id_ = []() -> char {
   legate_raft::MapLabelsTask::register_variants();
   return 0;
 }();
+
+}  // namespace

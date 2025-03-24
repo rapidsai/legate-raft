@@ -129,8 +129,7 @@ struct log_fn_gpu {
 
 class LogTask : public Task<LogTask, LOG> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{LOG}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{LOG}};
 
   static void cpu_variant(legate::TaskContext context)
   {

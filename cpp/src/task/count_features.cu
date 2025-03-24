@@ -175,8 +175,7 @@ struct sparse_count_features_fn_gpu {
 
 class SparseCountFeaturesTask : public Task<SparseCountFeaturesTask, COUNT_FEATURES> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{COUNT_FEATURES}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{COUNT_FEATURES}};
 
   static void cpu_variant(legate::TaskContext context)
   {
@@ -218,6 +217,8 @@ class SparseCountFeaturesTask : public Task<SparseCountFeaturesTask, COUNT_FEATU
                           n_features);
   }
 };
+
+}  // namespace legate_raft
 
 namespace {
 

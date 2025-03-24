@@ -132,8 +132,7 @@ struct add_constant_fn_gpu {
 
 class AddConstantTask : public Task<AddConstantTask, ADD_CONSTANT> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{ADD_CONSTANT}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{ADD_CONSTANT}};
 
   static void cpu_variant(legate::TaskContext context)
   {

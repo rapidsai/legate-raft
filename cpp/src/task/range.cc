@@ -48,8 +48,7 @@ struct range_fn {
 
 class RangeTask : public Task<RangeTask, RANGE> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{RANGE}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{RANGE}};
 
   static void cpu_variant(legate::TaskContext context)
   {

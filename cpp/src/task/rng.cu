@@ -72,8 +72,7 @@ struct uniform_int_fn_gpu {
 
 class UniformIntTask : public Task<UniformIntTask, UNIFORM_INT> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{UNIFORM_INT}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{UNIFORM_INT}};
 
   static void gpu_variant(legate::TaskContext context)
   {

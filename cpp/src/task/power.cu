@@ -110,8 +110,7 @@ struct power_fn_gpu {
 
 class PowerTask : public Task<PowerTask, POWER> {
  public:
-   static inline const auto TASK_CONFIG =
-    legate::TaskConfig{legate::LocalTaskID{POWER}};
+  static inline const auto TASK_CONFIG = legate::TaskConfig{legate::LocalTaskID{POWER}};
 
   static void cpu_variant(legate::TaskContext context)
   {
