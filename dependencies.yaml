@@ -207,7 +207,7 @@ dependencies:
       - output_types: [conda, requirements, pyproject]
         packages:
           - pytest>=7.0
-          - cupynumeric==25.03.*,>=0.0.0.dev0
+          - cupynumeric==25.05.*,>=0.0.0.dev0
           - hypothesis>=6
           - scikit-learn
           - joblib
@@ -229,13 +229,13 @@ dependencies:
     common:
       - output_types: [conda, pyproject, requirements]
         packages:
-          - legate==25.03.*,>=0.0.0.dev0
+          - legate==25.05.*,>=0.0.0.dev0
 
   depends_on_legate-dataframe:
     common:
       - output_types: [conda, pyproject, requirements]
         packages:
-          - legate-dataframe==25.03.*,>=0.0.0.dev0
+          - legate-dataframe==25.05.*,>=0.0.0.dev0
 
   depends_on_libraft:
     common:
