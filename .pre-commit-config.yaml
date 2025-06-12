@@ -61,8 +61,14 @@ repos:
         args:
           - --remove-empty-cells
 
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        args: ["--severity=warning"]
+
   - repo: https://github.com/rapidsai/dependency-file-generator
-    rev: v1.17.1
+    rev: v1.18.1
     hooks:
       - id: rapids-dependency-file-generator
         args: [--clean]

@@ -39,7 +39,7 @@ PARALLEL_LEVEL=${PARALLEL_LEVEL:=`nproc`}
 
 # NOTE: ensure all dir changes are relative to the location of this
 # script, and that this script resides in the repo dir!
-REPODIR=$(cd $(dirname $0); pwd)
+REPODIR=$(cd "$(dirname "$0")"; pwd)
 
 BUILD_TYPE=Release
 BUILD_DIR="${REPODIR}/cpp/build/"
