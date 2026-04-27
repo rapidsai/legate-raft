@@ -4,6 +4,8 @@ concurrency:
   group: ci-on-${{ github.event_name }}-from-${{ github.ref_name }}
   cancel-in-progress: true
 
+permissions: {}
+
 on:
   # run on pushes to certain branches
   push:
@@ -23,16 +25,22 @@ on:
 
 jobs:
   conda-python-build:
+    permissions:
+      id-token: write  # for AWS OIDC auth in reusable workflow
     uses: ./.github/workflows/conda-python-build.yaml
     with:
       script: "ci/build_python.sh"
   upload-conda:
+    permissions: {}
     needs:
       - conda-python-build
     uses: ./.github/workflows/conda-upload-packages.yaml
     secrets:
       CONDA_LEGATE_TOKEN: ${{ secrets.CONDA_LEGATE_TOKEN }}
   docs-build:
+    permissions:
+      pages: write      # for GitHub Pages deployment
+      id-token: write   # for OIDC verification of Pages deployment
     needs:
       - conda-python-build
     uses: ./.github/workflows/docs-build.yaml

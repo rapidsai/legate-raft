@@ -4,6 +4,8 @@ concurrency:
   group: ci-on-${{ github.event_name }}-from-${{ github.ref_name }}
   cancel-in-progress: true
 
+permissions: {}
+
 on:
   # run on pushes to certain branches
   push:
@@ -21,6 +23,7 @@ jobs:
   # group together all jobs that must pass for a PR to be merged
   # (for use by branch protections)
   pr-builder:
+    permissions: {}
     needs:
       - pre-commit
       - conda-python-build
@@ -29,6 +32,7 @@ jobs:
     uses: rapidsai/shared-workflows/.github/workflows/pr-builder.yaml@branch-24.12 # zizmor: ignore[unpinned-uses]
 
   pre-commit:
+    permissions: {}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
@@ -37,6 +41,8 @@ jobs:
     - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
 
   conda-python-build:
+    permissions:
+      id-token: write  # for AWS OIDC auth in reusable workflow
     needs:
       - pre-commit
     uses: ./.github/workflows/conda-python-build.yaml
@@ -44,6 +50,8 @@ jobs:
       script: "ci/build_python.sh"
 
   conda-python-tests:
+    permissions:
+      actions: read  # for cross-job artifact download
     needs:
       - pre-commit
       - conda-python-build
@@ -87,6 +95,9 @@ jobs:
           ci/test_python.sh
 
   docs-build:
+    permissions:
+      pages: write      # required by nested deploy job in docs-build.yaml (validated at parse time even when deploy: false)
+      id-token: write   # required by nested deploy job in docs-build.yaml (validated at parse time even when deploy: false)
     needs:
       - conda-python-build
     uses: ./.github/workflows/docs-build.yaml
